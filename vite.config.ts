@@ -46,7 +46,10 @@ export default defineConfig({
       }
     }
   },
-  plugins: [vue()]
+  plugins: [vue()],
+  optimizeDeps: {
+    exclude: ['vue-demi']
+  }
 })
 
 // export default config
