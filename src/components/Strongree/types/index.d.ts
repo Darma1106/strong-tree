@@ -1,3 +1,12 @@
+import type { Ref } from 'vue-demi'
+export interface StrongTreeInstance {
+  // 选择根节点
+  selectRoot: () => void
+  // 获取实例对象
+  getInstance: () => Ref<IzTreeObj>
+  // 禁用/恢复节点check
+  setCheckDisabled: (node: any, disabled: boolean, inheritParent: boolean, inheritChildren: boolean) => void
+}
 export interface JQuery {
   fn: {
     zTree: IzTree
@@ -244,8 +253,8 @@ export interface IzTreeObj {
   getNodeIndex: (treeNode: ITreeNode) => number
   getNodes: () => ITreeNode[]
   getNodesByFilter: (filter: filterFnType, isSingle?: boolean, parentNode?: ITreeNode, invokeParam?: any) => any
-  getNodesByParam: (key: string, value: any, parentNode?: object) => object
-  getNodesByParamFuzzy: (key: string, value: string, parentNode?: object) => object
+  getNodesByParam: (key: string, value: any, parentNode?: object) => any[]
+  getNodesByParamFuzzy: (key: string, value: string, parentNode?: object) => any[]
   getSelectedNodes: (isTure: boolean) => any
   hideNode: (treeNode: ITreeNode) => void
   hideNodes: (treeNodes: ITreeNode[]) => void

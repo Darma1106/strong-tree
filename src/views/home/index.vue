@@ -1,8 +1,15 @@
 <template>
-  <StrongTree :data="nnodes" :option="option" />
+  <strong-tree
+    ref="strongTreeRef"
+    :data="nnodes"
+    :option="option"
+    @node-change="handleNodeChange"
+    @node-check="handleNodeCheck"
+  />
 </template>
 
 <script setup lang="ts">
+import type { StrongTreeInstance } from '@/components/Strongree/types'
 import { ref } from 'vue-demi'
 import StrongTree from '@/components/Strongree/index.vue'
 
@@ -23,7 +30,14 @@ const nodes = ref([
 ])
 
 const nnodes = ref([
-  { name: 'test1', open: true, children: [{ name: 'test1_1' }, { name: 'test1_2' }] },
+  {
+    name: 'test1',
+    open: true,
+    children: [
+      { name: 'test1_1', flagc: 1 },
+      { name: 'test1_2', flagc: 1 }
+    ]
+  },
   { name: 'test2', open: true, children: [{ name: 'test2_1' }, { name: 'test2_2' }] }
 ])
 
@@ -31,11 +45,24 @@ const option = {
   check: {
     enable: true,
     chkStyle: 'checkbox',
-    chkboxType: { Y: '', N: '' }
+    chkboxType: { Y: 's', N: 's' }
   },
   view: {
     showIcon: false
   }
+}
+const strongTreeRef = ref<null | StrongTreeInstance>(null)
+
+const handleNodeChange = (node: any) => {
+  console.log('node', node.name)
+}
+const handleNodeCheck = (node: any) => {
+  const instance = strongTreeRef.value?.getInstance()
+  const nodes = instance?.value.getNodesByParam('flagc', 1, node) ?? []
+  nodes?.forEach((node) => {
+    if (!strongTreeRef.value) return
+    strongTreeRef.value.setCheckDisabled(node, true, false, false)
+  })
 }
 </script>
 

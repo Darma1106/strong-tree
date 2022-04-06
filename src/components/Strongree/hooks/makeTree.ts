@@ -1,13 +1,16 @@
 import type { ISetting, JQuery, IzTreeObj, IzTree } from '../types'
+import type { Ref } from 'vue-demi'
 import $ from 'jquery'
-import { onUnmounted } from 'vue-demi'
+import { ref, onUnmounted } from 'vue-demi'
 
+import '../resource/index.js'
 interface TreeCtl<T> {
-  loadData: (data: T) => void
-  getInstance: () => IzTreeObj
+  loadData: (data: T[]) => void
+  getInstance: () => Ref<IzTreeObj | null>
 }
 
 interface TreeState {
+  treeInstance: Ref<IzTreeObj | null>
   treeId: string
 }
 
@@ -23,24 +26,33 @@ export const useMakeTree = <T>(optioin: ISetting = {}): [TreeState, TreeCtl<T>] 
   const treeId = `strongree-${Math.floor(Math.random() * 100000)}`
 
   // 树实例
-  let treeInstance: IzTreeObj | null = null
+  const treeInstance: Ref<IzTreeObj | null> = ref(null)
+
+  // onMounted(() => {
+  //     loadData();
+  // });
   onUnmounted(() => {
-    if (!treeInstance) {
+    if (!treeInstance.value) {
       return
     }
-    treeInstance.destroy()
+    treeInstance.value.destroy()
   })
 
-  const loadData = (data: T) => {
+  const loadData = (data: T[] = []) => {
+    console.log(zTree, 'zTree')
+
     if (!zTree) {
       return
     }
 
     // 更新树的数据进行渲染
-    treeInstance = zTree.init($(`#${treeId}`), optioin, data)
+    treeInstance.value = zTree.init($(`#${treeId}`), optioin, data)
   }
 
-  const getInstance = () => treeInstance ?? ({} as IzTreeObj)
+  const getInstance = () => treeInstance
 
-  return [{ treeId }, { loadData, getInstance }]
+  return [
+    { treeId, treeInstance },
+    { loadData, getInstance }
+  ]
 }
