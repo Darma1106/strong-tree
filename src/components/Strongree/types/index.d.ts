@@ -54,9 +54,9 @@ export interface ITreeNode {
   [key: string]: any
 }
 
-export type ApplicationType = 'application/x-www-form-urlencoded' | 'application/json'
+export type ApplicationType = 'application/json' | 'application/x-www-form-urlencoded'
 export type AjaxType = 'get' | 'post'
-export type DataType = 'text' | 'json' | 'jsonp' | 'html' | 'xml' | 'script'
+export type DataType = 'html' | 'json' | 'jsonp' | 'script' | 'text' | 'xml'
 
 /**
  * Defines a class to be returned by the zTree view.nodeClasses function
