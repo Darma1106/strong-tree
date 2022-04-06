@@ -1,42 +1,55 @@
 <template>
-  <StrongTree :data="nnodes" :option="option" />
+  <strong-tree ref="StrongTreeRef"
+                         :data="nodes"
+                         :option="setting"
+                         @node-change="handleNodeChange"
+                         @node-check="handleNodeCheck" />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue-demi'
 import StrongTree from '@/components/Strongree/index.vue'
 
-const nodes = ref([
-  { id: 1, pid: 0, name: '随意勾选 1', open: true },
-  { id: 11, pid: 1, name: '随意勾选 1-1', open: true },
-  { id: 111, pid: 11, name: '随意勾选 1-1-1' },
-  { id: 112, pid: 11, name: '随意勾选 1-1-2' },
-  { id: 12, pid: 1, name: '随意勾选 1-2', open: true },
-  { id: 121, pid: 12, name: '随意勾选 1-2-1' },
-  { id: 122, pid: 12, name: '随意勾选 1-2-2' },
-  { id: 2, pid: 0, name: '随意勾选 2', checked: true, open: true },
-  { id: 21, pid: 2, name: '随意勾选 2-1' },
-  { id: 22, pid: 2, name: '随意勾选 2-2', open: true },
-  { id: 221, pid: 22, name: '随意勾选 2-2-1', checked: true },
-  { id: 222, pid: 22, name: '随意勾选 2-2-2' },
-  { id: 23, pid: 2, name: '随意勾选 2-3' }
-])
+const nodes = ref<any[]>([]);
+const setting: any = {
+    check: {
+        enable: true,
+        chkboxType: { Y: 's', N: 's' },
+    },
+    data: {
+        key: {
+            name: 'text',
+        },
+        simpleData: {
+            enable: true,
+            idKey: 'id',
+        },
+    },
+    view: {
+        showIcon: false,
+    },
+};
 
-const nnodes = ref([
-  { name: 'test1', open: true, children: [{ name: 'test1_1' }, { name: 'test1_2' }] },
-  { name: 'test2', open: true, children: [{ name: 'test2_1' }, { name: 'test2_2' }] }
-])
+const StrongTreeRef = ref(null as Nullable<StrongTreeInstance>);
 
-const option = {
-  check: {
-    enable: true,
-    chkStyle: 'checkbox',
-    chkboxType: { Y: '', N: '' }
-  },
-  view: {
-    showIcon: false
-  }
-}
+const grpId = ref();
+
+const handleNodeChange = (node: GetAssocUser_GridData)=>{
+    console.log('node', node.id);
+    grpId.value = node.id;
+};
+
+const handleNodeCheck = (node: any)=>{
+    const instance = StrongTreeRef.value?.getInstance();
+    const nodes = instance?.value.getNodesByParam('b_inherit_prole', 1, node);
+    console.log('nodes', nodes);
+    nodes.forEach(node => {
+        StrongTreeRef.value.setCheckDisabled(node, true, false, false);
+    });
+    // StrongTreeRef.value.setCheckDisabled(nodes, true, false, true);
+    // StrongTreeRef.value.setCheckDisabled(node, false, false, false);
+
+};
 </script>
 
 <style lang="less" scope></style>
